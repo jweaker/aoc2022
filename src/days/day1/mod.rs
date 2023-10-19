@@ -1,42 +1,60 @@
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-
+use std::fs;
 pub fn solve() {
     println!("** Day1");
     let file_path = "src/days/day1/input.txt";
-    let file = File::open(file_path).unwrap();
-    let reader = BufReader::new(file);
+    let input = fs::read_to_string(file_path).unwrap();
+    let sol1 = part1(&input);
+    let sol2 = part2(&input);
+    println!("sol1: {} | sol2: {}", sol1, sol2);
+}
+fn part1(input: &String) -> String {
+    input
+        .split("\n\n")
+        .map(|group| {
+            group
+                .lines()
+                .map(|val| val.parse::<u32>().unwrap())
+                .sum::<u32>()
+        })
+        .max()
+        .unwrap()
+        .to_string()
+}
 
-    let mut map: HashMap<i32, i32> = HashMap::new();
-    let mut current_elf = 0;
-    let mut max_elf = 0;
-    let mut max_calories = i32::min_value();
+fn part2(input: &String) -> String {
+    let mut maxes: Vec<u32> = input
+        .split("\n\n")
+        .map(|group| {
+            group
+                .lines()
+                .map(|val| val.parse::<u32>().unwrap())
+                .sum::<u32>()
+        })
+        .collect();
+    maxes.sort_by(|a, b| b.cmp(a));
+    maxes.iter().take(3).sum::<u32>().to_string()
+}
 
-    for line in reader.lines() {
-        let line = line.unwrap();
-        let entry = map.entry(current_elf).or_insert(0);
+#[test]
+fn test() {
+    let input = "1000
+2000
+3000
 
-        if line.is_empty() {
-            // Update the maximum Elf.
-            if *entry > max_calories {
-                max_elf = current_elf;
-                max_calories = *entry;
-            }
+4000
+5000
 
-            // Switch to the next Elf.
-            current_elf += 1;
-            continue;
-        }
+6000
+7000
+8000
 
-        let calories = line.parse::<i32>().unwrap_or(0);
+9000
 
-        // Use the entry API to insert or update the calories.
-        *entry += calories;
-    }
+10000"
+        .to_string();
 
-    println!(
-        "The Elf with the most calories is Elf {}, with {} calories.",
-        max_elf, max_calories
-    );
+    let sol1 = part1(&input);
+    assert_eq!(sol1, "21000");
+    let sol2 = part2(&input);
+    assert_eq!(sol2, "40000");
 }
