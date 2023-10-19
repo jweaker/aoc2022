@@ -7,7 +7,7 @@ pub fn solve() {
     let sol2 = part2(&input);
     println!("sol1: {} | sol2: {}", sol1, sol2);
 }
-fn part1(input: &String) -> String {
+fn part1(input: &str) -> String {
     input
         .split("\n\n")
         .map(|group| {
@@ -21,7 +21,7 @@ fn part1(input: &String) -> String {
         .to_string()
 }
 
-fn part2(input: &String) -> String {
+fn part2(input: &str) -> String {
     let mut maxes: Vec<u32> = input
         .split("\n\n")
         .map(|group| {
@@ -50,11 +50,10 @@ fn test() {
 
 9000
 
-10000"
-        .to_string();
+10000";
 
-    let sol1 = part1(&input);
+    let sol1 = part1(input);
     assert_eq!(sol1, "21000");
-    let sol2 = part2(&input);
+    let sol2 = part2(input);
     assert_eq!(sol2, "40000");
 }
